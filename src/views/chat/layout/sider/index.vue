@@ -17,7 +17,20 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-  chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
+	fetch('http://localhost/api/chat', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			// 在这里添加请求体的内容
+		})
+	})
+		.then(response => response.json())
+		.then(data => {
+			chatStore.addHistory({ title: data.chatName, uuid: data.chatSn, isEdit: false })
+		})
+		.catch(error => console.error(error))
 }
 
 function handleUpdateCollapsed() {

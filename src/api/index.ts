@@ -26,14 +26,15 @@ export function fetchChatAPIProcess<T = any>(
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
-    
+
 ) {
   console.log('process', process.env.NODE_ENV === 'development')
   return post<T>({
-    url: 'https://cbjtestapi.binjie.site:7777/api/generateStream',
-    data: { prompt: params.prompt, userId: window.location.hash, network: !!params.network },
+    url: 'http://localhost/api/message-demo',
+    data: { stream: true,content: params.prompt,prompt: params.prompt, userId: window.location.hash, network: !!params.network },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
+
   })
 }
 
