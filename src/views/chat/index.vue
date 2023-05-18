@@ -128,8 +128,6 @@ async function onConversation() {
 			const eventSourceUrl = `http://localhost/api/message/` + messageSn + '?stream=true';
 			const eventSource = new EventSource(eventSourceUrl);
 			eventSource.onmessage = (event) => {
-				console.info(event.data);
-				console.info(tte);
 				tte += JSON.parse(event.data).content;
 				updateChat(
 					+uuid,
@@ -144,6 +142,7 @@ async function onConversation() {
 						requestOptions: {prompt: message, options: {...options}},
 					},
 				)
+				scrollToBottom();
 			};
 			eventSource.onclose = () => {
 				loading.value = false
