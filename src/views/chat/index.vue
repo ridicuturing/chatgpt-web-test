@@ -30,7 +30,7 @@ const chatStore = useChatStore()
 useCopyCode()
 
 const { isMobile } = useBasicLayout()
-const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
+const { addChat, updateChat, updateChatSome } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
@@ -101,14 +101,8 @@ async function onConversation() {
 	let tte = ''
 	let chatSn = window.location.hash.substring(window.location.hash.lastIndexOf('/') + 1);
 
-	const requestData = {
-		content: message,
-		chatSn: chatSn,
-		delayResponse: true
-	};
-
 // 发送 POST 请求并获取 messageSn
-	fetch('http://localhost/api/message', {
+	fetch('/api/message', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -125,7 +119,7 @@ async function onConversation() {
 			const messageSn = data.messageSn;
 
 			// 使用 EventSource 调用对应的 API
-			const eventSourceUrl = `http://localhost/api/message/` + messageSn + '?stream=true';
+			const eventSourceUrl = `/api/message/` + messageSn + '?stream=true';
 			const eventSource = new EventSource(eventSourceUrl);
 			eventSource.onmessage = (event) => {
 				tte += JSON.parse(event.data).content;
@@ -144,9 +138,6 @@ async function onConversation() {
 				)
 				scrollToBottom();
 			};
-			eventSource.onclose = () => {
-				loading.value = false
-			};
 			eventSource.onerror = (error) => {
 				loading.value = false
 				eventSource.close();
@@ -158,7 +149,7 @@ async function onConversation() {
 			console.error(error);
 		});
 
-	/*let eventSource = fetchEventSource("http://localhost/api/message", {
+	/*let eventSource = fetchEventSource("/api/message", {
 		method: 'POST',
 		headers: {
 			"Content-Type": 'application/json',

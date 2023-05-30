@@ -30,7 +30,7 @@ export function fetchChatAPIProcess<T = any>(
 ) {
   console.log('process', process.env.NODE_ENV === 'development')
   return post<T>({
-    url: 'http://localhost/api/message-demo',
+    url: '/api/message-demo',
     data: { stream: true,content: params.prompt,prompt: params.prompt, userId: window.location.hash, network: !!params.network },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
