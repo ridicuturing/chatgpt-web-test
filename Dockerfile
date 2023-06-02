@@ -1,20 +1,7 @@
-# build front-end
-FROM node:lts-alpine AS builder
-
-COPY ./ /app
-WORKDIR /app
-
-RUN apk add --no-cache git \
-    && npm install pnpm -g \
-    && pnpm install \
-    && pnpm run build \
-    && rm -rf /root/.npm /root/.pnpm-store /usr/local/share/.cache /tmp/*
-
-# service
 FROM nginx:mainline-alpine-slim
 
 #COPY /service /app
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /dist /usr/share/nginx/html
 
 WORKDIR /app
 RUN echo 'server {\
