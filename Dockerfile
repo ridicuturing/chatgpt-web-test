@@ -1,7 +1,7 @@
 FROM nginx:mainline-alpine-slim
 
 #COPY /service /app
-COPY --from=builder /dist /usr/share/nginx/html
+COPY /dist /usr/share/nginx/html
 
 WORKDIR /app
 RUN echo 'server {\
