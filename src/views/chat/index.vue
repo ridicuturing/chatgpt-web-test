@@ -31,7 +31,7 @@ useCopyCode()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome } = useChat()
-const { scrollRef, scrollToBottom } = useScroll()
+const { scrollToBottomIfAtBottom, scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
@@ -136,7 +136,7 @@ async function onConversation() {
 						requestOptions: {prompt: message, options: {...options}},
 					},
 				)
-				scrollToBottom();
+				scrollToBottomIfAtBottom();
 			};
 			eventSource.onerror = (error) => {
 				loading.value = false
