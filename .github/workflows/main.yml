@@ -1,0 +1,26 @@
+name: Build docker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the code repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      # Install pnpm package manager
+      - name: Install pnpm
+        uses: pnpm/setup-pnpm@v1
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: pnpm install
+
+      # Run build command
+      - name: Build
+        run: pnpm build
