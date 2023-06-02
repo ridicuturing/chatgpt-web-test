@@ -15,8 +15,8 @@ jobs:
       
       # Install pnpm package manager
       - name: Install pnpm
-        uses: pnpm/setup-pnpm@v1
-
+        uses: pnpm/setup-pnpm@v2
+        
       # Install dependencies
       - name: Install Dependencies
         run: pnpm install
