@@ -71,7 +71,7 @@ async function onConversation() {
 			inversion: true,
 			error: false,
 			conversationOptions: null,
-			requestOptions: {prompt: message, options: null},
+			requestOptions: {messageSn : '',prompt: message, options: null},
 		},
 	)
 	scrollToBottom()
@@ -94,7 +94,7 @@ async function onConversation() {
 			inversion: false,
 			error: false,
 			conversationOptions: null,
-			requestOptions: {prompt: message, options: {...options}},
+			requestOptions: {messageSn : '',prompt: message, options: {...options}},
 		},
 	)
 	scrollToBottom()
@@ -133,7 +133,7 @@ async function onConversation() {
 						error: false,
 						loading: false,
 						conversationOptions: {},
-						requestOptions: {prompt: message, options: {...options}},
+						requestOptions: {messageSn : messageSn,prompt: message, options: {...options}},
 					},
 				)
 				scrollToBottomIfAtBottom();
@@ -306,6 +306,7 @@ async function onRegenerate(index: number) {
 		options = {...requestOptions.options}
 
 	loading.value = true
+	const messageSn = requestOptions.messageSn
 
 	updateChat(
 		+uuid,
@@ -317,75 +318,53 @@ async function onRegenerate(index: number) {
 			error: false,
 			loading: true,
 			conversationOptions: null,
-			requestOptions: {prompt: message, ...options},
+			requestOptions: {messageSn : requestOptions.messageSn,prompt: message, ...options},
 		},
 	)
-// debugger;
-	try {
-		await fetchChatAPIProcess<Chat.ConversationResponse>({
-			prompt: message,
-			options,
-			network: !!chatStore.getEnabledNetwork,
-			signal: controller.signal,
-			onDownloadProgress: ({event}) => {
-				const xhr = event.target
-				const {responseText} = xhr
-				// Always process the final line
-				// const lastIndex = responseText.lastIndexOf('\n')
-				let chunk = responseText;
-				// if (lastIndex !== -1)
-				// chunk = responseText.substring(lastIndex)
-				try {
-					// const data = JSON.parse(chunk)
-					updateChat(
-						+uuid,
-						dataSources.value.length - 1,
-						{
-							dateTime: new Date().toLocaleString(),
-							text: chunk ?? '',
-							inversion: false,
-							error: false,
-							loading: false,
-							conversationOptions: {},
-							requestOptions: {prompt: message, options: {...options}},
-						},
-					)
-					scrollToBottom()
-				} catch (error) {
-					//
-				}
-			},
-		});
-	} catch (error: any) {
-		if (error.text === 'canceled') {
-			updateChatSome(
-				+uuid,
-				index,
-				{
-					loading: false,
-				},
-			)
-			return
-		}
 
-		const errorMessage = error?.text ?? t('common.wrong')
+	let subContent = ''
+	let chatSn = window.location.hash.substring(window.location.hash.lastIndexOf('/') + 1);
+	// 获取响应中的 messageSn
 
+	// 使用 EventSource 调用对应的 API
+	const eventSourceUrl = `/api/message/` + messageSn + '?stream=true&regenerate=true';
+	const eventSource = new EventSource(eventSourceUrl);
+	eventSource.onmessage = (event) => {
+		subContent += JSON.parse(event.data).content;
 		updateChat(
 			+uuid,
 			index,
 			{
 				dateTime: new Date().toLocaleString(),
-				text: errorMessage,
+				text: subContent,
+				inversion: false,
+				error: false,
+				loading: false,
+				conversationOptions: {},
+				requestOptions: {messageSn : requestOptions.messageSn,prompt: message, options: {...options}},
+			},
+		)
+		scrollToBottomIfAtBottom();
+	};
+	eventSource.onerror = (error) => {
+		loading.value = false
+		eventSource.close();
+		console.error(error);
+		/*updateChat(
+			+uuid,
+			index,
+			{
+				dateTime: new Date().toLocaleString(),
+				text: 'errorMessage',
 				inversion: false,
 				error: true,
 				loading: false,
 				conversationOptions: null,
-				requestOptions: {prompt: message, ...options},
+				requestOptions: {messageSn : messageSn,prompt: message, ...options},
 			},
-		)
-	} finally {
+		)*/
 		loading.value = false
-	}
+	};
 }
 
 function handleExport() {
