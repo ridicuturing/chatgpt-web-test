@@ -17,7 +17,7 @@ const show = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
 
 function handleAdd() {
-	fetch('http://localhost/api/chat', {
+	fetch('/api/chat', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

@@ -122,6 +122,7 @@ async function onConversation() {
 			const eventSourceUrl = `/api/message/` + messageSn + '?stream=true';
 			const eventSource = new EventSource(eventSourceUrl);
 			eventSource.onmessage = (event) => {
+				loading.value = false
 				tte += JSON.parse(event.data).content;
 				updateChat(
 					+uuid,
@@ -330,6 +331,7 @@ async function onRegenerate(index: number) {
 	const eventSourceUrl = `/api/message/` + messageSn + '?stream=true&regenerate=true';
 	const eventSource = new EventSource(eventSourceUrl);
 	eventSource.onmessage = (event) => {
+		loading.value = false
 		subContent += JSON.parse(event.data).content;
 		updateChat(
 			+uuid,
