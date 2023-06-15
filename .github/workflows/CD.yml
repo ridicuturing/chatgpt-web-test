@@ -19,7 +19,6 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
-        timeout: 600
         script: |
           docker compose pull chat-web
           docker compose up -d chat-web
