@@ -14,7 +14,6 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
 let controller = new AbortController()
@@ -30,7 +29,8 @@ const chatStore = useChatStore()
 useCopyCode()
 
 const { isMobile } = useBasicLayout()
-const { addChat, updateChat, updateChatSome } = useChat()
+//const { addChat, updateChat, updateChatSome } = useChat()
+const { addChat, updateChat } = useChat()
 const { scrollToBottomIfAtBottom, scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
@@ -324,7 +324,7 @@ async function onRegenerate(index: number) {
 	)
 
 	let subContent = ''
-	let chatSn = window.location.hash.substring(window.location.hash.lastIndexOf('/') + 1);
+	//let chatSn = window.location.hash.substring(window.location.hash.lastIndexOf('/') + 1);
 	// 获取响应中的 messageSn
 
 	// 使用 EventSource 调用对应的 API
