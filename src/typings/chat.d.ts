@@ -8,7 +8,7 @@ declare namespace Chat {
 		loading?: boolean
 		conversationOptions?: ConversationRequest | null
 		requestOptions: {
-            messageSn: any prompt: string; options?: ConversationRequest | null
+            messageSn: any; prompt: string; options?: ConversationRequest | null
 		}
 	}
 
